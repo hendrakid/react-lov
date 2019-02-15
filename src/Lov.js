@@ -7,28 +7,27 @@ class lov extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            lovText: '',
             url: '',
             data: [],
             param: '',
-            columns: []
+            columns: [],
+            sort: "asc",
+            field: ''
         }
         this.hideLov = this.hideLov.bind(this)
         this.getDataFromDb = this.getDataFromDb.bind(this)
         this.handleDataCallBack = this.handleDataCallBack.bind(this)
-        // console.log('Contructor');
-        // console.log(this.state)
+        this.handleDataSort = this.handleDataSort.bind(this)
+
     }
 
     componentWillMount() {
         // console.log('Component WILL MOUNT')
         // console.log(this.state)
-        const { data } = this.props // data itu variable yang kita kirim, harus sama dengan yang dari parent
         const { url } = this.props
         const { param } = this.props
         const { columns } = this.props
         this.setState({
-            lovText: data,
             url: url,
             param: param,
             columns: columns
@@ -39,6 +38,14 @@ class lov extends Component {
         // console.log(this.state)
         this._isMounted = true
         this.getDataFromDb()
+
+        let items = this.state.columns
+        items.map((data, index) => {
+            console.log("Sort true")
+            let item = Object.assign({}, this.state.columns[index], { onSort: (field, order) => { this.handleDataSort(field, order) } });
+            items[index] = item;
+            this.setState({ columns: items });
+        })
     }
     componentWillUnmount() {
         //asdas
@@ -52,7 +59,7 @@ class lov extends Component {
             body: JSON.stringify({
                 "projectionField": 'username createdAt role',
                 "limit": 10,
-                "param": this.state.lovText
+                "param": this.state.param
             })
         })
             .then(data => data.json())
@@ -62,7 +69,7 @@ class lov extends Component {
                 }
             })
             .then(res => {
-                if (this.state.param == "" || this.state.data.length == 0) {
+                if (this.state.data.length == 0) {
                     this.hideLov()
                 } else {
                     console.log('ada isinya')
@@ -76,11 +83,21 @@ class lov extends Component {
     }
     handleDataCallBack(event) {
         event.preventDefault()
-        // this.props.dataRowCallBack(data)
+    } 
+    
+    handleDataSort(field, order) {
+        this.setState({
+            field: field,
+            sort: order,
+            data: []
+        })
+        console.log(field + order)
+
+        this.getDataFromDb()
     }
 
+
     render() {
-        // console.log('Render');
         const divStyle = {
             top: '30px',
             position: 'absolute',

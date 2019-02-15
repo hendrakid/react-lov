@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { DebounceInput } from 'react-debounce-input';
 import Lov from './Lov.js'
+import { Button } from 'reactstrap';
 
 class App extends Component {
 
@@ -64,19 +65,18 @@ class App extends Component {
       <div >
         <input type='hidden' vaule={this.state.lovId} id='text-input' />
         <DebounceInput
-          minLength={2}
+          minLength={1}
           value={this.state.lovText}
           debounceTimeout={750}
           onChange={e => this.callLov(e.target.value)} />
-        <button onClick={this.clickLov} ><i className='fa fa-search' />Q</button>
+        <Button color="danger" onClick={this.clickLov} ><i className='fa fa-search' />Q</Button>
         {
           this.state.showLov == true ?
             <Lov
-              data={lovText}
+              param={lovText}
               url='/api/getData'
-              param='param'
-              columns={[{ dataField: 'username', text: 'Username' },
-              { dataField: 'role', text: 'Role' }]}
+              columns={[{ dataField: 'username', text: 'Username', sort: true },
+              { dataField: 'role', text: 'Role', sort: true }]}
               dataLovIsShowCallBack={this.dataLovIsShowCallBack}
               dataRowCallBack={this.dataRowCallBack}
             />
