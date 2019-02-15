@@ -22,3 +22,10 @@ lov will show datas with table, to handle every action on table use this table m
   ```
   npm install react-bootstrap-table-next --save
   ```
+
+
+## OR
+
+you can just use this source and install it by npm
+
+``` npm install ```
